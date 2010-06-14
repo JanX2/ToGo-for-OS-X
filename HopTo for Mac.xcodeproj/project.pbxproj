@@ -18,6 +18,9 @@
 		3AAFF4AE11796A2E0063C280 /* FUURLManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAFF4AD11796A2E0063C280 /* FUURLManager.m */; };
 		3AB3608B117ED68000B0D12A /* PairingService.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AB3608A117ED68000B0D12A /* PairingService.m */; };
 		3AB796881181795700676D1B /* Foundation+.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AAFF4A911796A0C0063C280 /* Foundation+.m */; };
+		3AD2320511C6E0440027A7E9 /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AD2320411C6E0440027A7E9 /* Sparkle.framework */; };
+		3AD232DD11C6E0720027A7E9 /* Sparkle.framework in CopyFiles */ = {isa = PBXBuildFile; fileRef = 3AD2320411C6E0440027A7E9 /* Sparkle.framework */; };
+		3AD232E611C6E2070027A7E9 /* ToGoPub.pem in Resources */ = {isa = PBXBuildFile; fileRef = 3AD232E511C6E2070027A7E9 /* ToGoPub.pem */; };
 		3AF2793F117AB94D00492582 /* Server.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF2793A117AB94D00492582 /* Server.m */; };
 		3AF27940117AB94D00492582 /* Connection.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF2793D117AB94D00492582 /* Connection.m */; };
 		3AF27946117AB9EC00492582 /* Pairing_WindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AF27945117AB9EC00492582 /* Pairing_WindowController.m */; };
@@ -31,6 +34,19 @@
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
 /* End PBXBuildFile section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		3AD232E111C6E07D0027A7E9 /* CopyFiles */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				3AD232DD11C6E0720027A7E9 /* Sparkle.framework in CopyFiles */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
 		089C165DFE840E0CC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
@@ -60,6 +76,8 @@
 		3AAFF4AD11796A2E0063C280 /* FUURLManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FUURLManager.m; path = "Projects/OS X/HopTo for Mac/trunk/FUURLManager.m"; sourceTree = DEVELOPER_DIR; };
 		3AB36089117ED68000B0D12A /* PairingService.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = PairingService.h; path = "Projects/OS X/HopTo for Mac/trunk/PairingService.h"; sourceTree = DEVELOPER_DIR; };
 		3AB3608A117ED68000B0D12A /* PairingService.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = PairingService.m; path = "Projects/OS X/HopTo for Mac/trunk/PairingService.m"; sourceTree = DEVELOPER_DIR; };
+		3AD2320411C6E0440027A7E9 /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = "Projects/OS X/HopTo for Mac/trunk/Sparkle.framework"; sourceTree = DEVELOPER_DIR; };
+		3AD232E511C6E2070027A7E9 /* ToGoPub.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = ToGoPub.pem; path = "Projects/OS X/HopTo for Mac/trunk/ToGoPub.pem"; sourceTree = DEVELOPER_DIR; };
 		3AF27939117AB94D00492582 /* Server.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Server.h; path = "Projects/OS X/HopTo for Mac/trunk/Server.h"; sourceTree = DEVELOPER_DIR; };
 		3AF2793A117AB94D00492582 /* Server.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Server.m; path = "Projects/OS X/HopTo for Mac/trunk/Server.m"; sourceTree = DEVELOPER_DIR; };
 		3AF2793B117AB94D00492582 /* ServerDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ServerDelegate.h; path = "Projects/OS X/HopTo for Mac/trunk/ServerDelegate.h"; sourceTree = DEVELOPER_DIR; };
@@ -89,6 +107,7 @@
 				3AF279B5117AC1F100492582 /* Foundation.framework in Frameworks */,
 				3A2046411185440F00554744 /* SystemConfiguration.framework in Frameworks */,
 				3AFE7A5A11AEC24E004D5DFE /* Carbon.framework in Frameworks */,
+				3AD2320511C6E0440027A7E9 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -107,6 +126,8 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				3AFE7A5911AEC24E004D5DFE /* Carbon.framework */,
+				3AD2320411C6E0440027A7E9 /* Sparkle.framework */,
 				3AFE7A4B11AEC11A004D5DFE /* OSAKit.framework */,
 				3A2046401185440F00554744 /* SystemConfiguration.framework */,
 				3AF27955117AC0FD00492582 /* CoreFoundation.framework */,
@@ -136,7 +157,6 @@
 				29B97317FDCFA39411CA2CEA /* Resources */,
 				29B97323FDCFA39411CA2CEA /* Frameworks */,
 				19C28FACFE9D520D11CA2CBB /* Products */,
-				3AFE7A5911AEC24E004D5DFE /* Carbon.framework */,
 			);
 			name = "HopTo for Mac";
 			sourceTree = "<group>";
@@ -155,6 +175,7 @@
 		29B97317FDCFA39411CA2CEA /* Resources */ = {
 			isa = PBXGroup;
 			children = (
+				3AD232E211C6E1FB0027A7E9 /* Signing */,
 				3A692FA5119A913200ADAE2F /* Status Icon Blink 2.png */,
 				3A692FA6119A913200ADAE2F /* Status Icon Blink 1.png */,
 				3A692F97119A7F1A00ADAE2F /* Icon.icns */,
@@ -241,6 +262,14 @@
 			name = "Device Interaction";
 			sourceTree = "<group>";
 		};
+		3AD232E211C6E1FB0027A7E9 /* Signing */ = {
+			isa = PBXGroup;
+			children = (
+				3AD232E511C6E2070027A7E9 /* ToGoPub.pem */,
+			);
+			name = Signing;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -251,6 +280,7 @@
 				8D1107290486CEB800E47090 /* Resources */,
 				8D11072C0486CEB800E47090 /* Sources */,
 				8D11072E0486CEB800E47090 /* Frameworks */,
+				3AD232E111C6E07D0027A7E9 /* CopyFiles */,
 			);
 			buildRules = (
 			);
@@ -290,6 +320,7 @@
 				3A20462011852C2100554744 /* SendURL_WindowController.xib in Resources */,
 				3A920D721193307D008C83B7 /* Status Icon.png in Resources */,
 				3A692F98119A7F1A00ADAE2F /* Icon.icns in Resources */,
+				3AD232E611C6E2070027A7E9 /* ToGoPub.pem in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -341,8 +372,13 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				COPY_PHASE_STRIP = NO;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/Projects/OS X/HopTo for Mac/trunk\"",
+				);
 				GCC_DYNAMIC_NO_PIC = NO;
 				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_ENABLE_OBJC_GC = required;
 				GCC_MODEL_TUNING = G5;
 				GCC_OPTIMIZATION_LEVEL = 0;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -358,6 +394,11 @@
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"\"$(DEVELOPER_DIR)/Projects/OS X/HopTo for Mac/trunk\"",
+				);
+				GCC_ENABLE_OBJC_GC = required;
 				GCC_MODEL_TUNING = G5;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = HopTo_for_Mac_Prefix.pch;

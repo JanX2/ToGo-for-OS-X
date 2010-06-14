@@ -43,5 +43,9 @@
 			<string>us.fappulo.togoxxl</string>
 		</dict>
 	</array>
+	<key>SUPublicDSAKeyFile</key>
+	<string>ToGoPub.pem</string>
+	<key>SUFeedURL</key>
+	<string>http://fappulo.us/apps_backend/HopTo/HopToUpdates.xml</string>
 </dict>
 </plist>
