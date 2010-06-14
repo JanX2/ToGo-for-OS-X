@@ -1,0 +1,128 @@
+//
+// Prefix header for all source files of the 'HopTo for Mac' target in the 'HopTo for Mac' project
+//
+
+#ifdef __OBJC__
+	#import <Cocoa/Cocoa.h>
+	#import <Foundation/Foundation.h>
+	#import <CoreFoundation/CoreFoundation.h>
+//#import <OSAKit/OSAKit.h>
+//#import <Carbon/Carbon.h>
+	#import <AppKit/AppKit.h>
+	#import <SystemConfiguration/SystemConfiguration.h>
+	#include <sys/socket.h>
+	#include <netinet/in.h>
+	#include <unistd.h>
+#endif
+
+// Delegate Protocols
+#import "ServerDelegate.h"
+#import "ConnectionDelegate.h"
+#import "ServerBrowserDelegate.h"
+
+// Global Dependencies
+#import "Functions.h"
+#import "HopTo_for_MacAppDelegate.h"
+#import "Foundation+.h"
+
+/* Model *\
+\*********/
+
+// Business Logic
+#import "FUURLManager.h"
+
+// Networking
+#import "Server.h"
+#import "Connection.h"
+#import "PairingService.h"
+#import "ServerBrowser.h"
+
+/* View *\
+\********/
+
+// Pairing
+#import "Pairing_WindowController.h"
+#import "SendURL_WindowController.h"
+
+/* Macros *\
+\**********/
+
+// Environment Stuff
+#ifdef __AVAILABILITY_INTERNAL__MAC_10_6
+#define OS_X_6
+#endif
+
+// Shared Instances
+#define APP_DELEGATE [[NSApplication sharedApplication] delegate]
+#define Funcc [FUNCC mainCenter]
+
+// Data Access
+#define DEVICE_NAME [APP_DELEGATE computerName]
+#define SAVE_DOWN [APP_DELEGATE saveDown]
+#define MANAGED_OBJECT_CONTEXT [APP_DELEGATE managedObjectContext]
+#define APP_BUNDLE [APP_DELEGATE appBundle]
+#define DOCUMENTS_DIRECTORY [APP_DELEGATE documentsDirectory]
+#define OBJECT_WITH_STRING_ID(a) [APP_DELEGATE.managedObjectContext \
+objectWithID: [APP_DELEGATE.persistentStoreCoordinator managedObjectIDForURIRepresentation: [NSURL URLWithString: a]]]
+#define OBJECT_WITH_ID(a) [MANAGED_OBJECT_CONTEXT objectWithID: a]
+#define OBJECT_ID_WITH_STRING(a) [APP_DELEGATE.persistentStoreCoordinator managedObjectIDForURIRepresentation: [NSURL URLWithString: a]]
+#define OBJECT_ID_STRING(a) [[a URIRepresentation] absoluteString]
+
+// Bundle Resources
+
+// Object Creation
+#define NSNULL [NSNull null]
+#define STRING(a) [NSMutableString stringWithString: a]
+#define STRING_WITH_FORMAT(a, ...) [NSMutableString stringWithFormat: a, __VA_ARGS__]
+#define DICTIONARY(...) [NSMutableDictionary dictionaryByAddingObjectsAndKeys: __VA_ARGS__, nil]
+#define ARRAY(...) [[NSMutableArray arrayWithObjects: __VA_ARGS__, nil] retain]
+#define INTOBJ(a) [NSNumber numberWithInteger: a]
+#define DOUBOBJ(a) [NSNumber numberWithDouble: a]
+#define BOOLOBJ(a) [NSNumber numberWithBool: a]
+#define ENTITY(a) [NSEntityDescription entityForName: a inManagedObjectContext: MANAGED_OBJECT_CONTEXT]
+#define CREATE_ENTITY(a) [NSEntityDescription insertNewObjectForEntityForName: a inManagedObjectContext: MANAGED_OBJECT_CONTEXT]
+#define SORT_DESCRIPTOR(a, b) [[[NSSortDescriptor alloc] initWithKey: a ascending: b] autorelease]
+#define KEY_PATH_EXPRESSION(a) [NSExpression expressionForKeyPath: a]
+#define FUNCTION_EXPRESSION(a, ...) [NSExpression expressionForFunction: a arguments: ARRAY(__VA_ARGS__)]
+#define INDEX_PATH(a, b) [NSIndexPath indexPathForRow: a inSection: b]
+#define FLEXIBLE_SPACE [[[UIBarButtonItem alloc] initWithBarButtonSystemItem: UIBarButtonSystemItemFlexibleSpace target: nil action: nil] autorelease]
+
+// Object Manipulation
+#define INTVALUE(a) [a integerValue]
+#define DOUBVALUE(a) [a doubleValue]
+#define BOOLVALUE(a) [a boolValue]
+
+// Defaults Getters
+#define FU_DEBUG_MODE [[NSUserDefaults standardUserDefaults] boolForKey: @"FU_Debug_Mode"]
+#define FU_MEMORY_MODE [[NSUserDefaults standardUserDefaults] boolForKey: @"FU_Memory_Mode"]
+#define FU_CORE_DATA_LOGGING [[NSUserDefaults standardUserDefaults] boolForKey: @"FU_Core_Data_Logging"]
+
+// Quick Cheats
+#define SHOW_NETWORK_INDICATOR [UIApplication sharedApplication].networkActivityIndicatorVisible = YES
+#define HIDE_NETWORK_INDICATOR [UIApplication sharedApplication].networkActivityIndicatorVisible = NO
+#define IPSection indexPath.section
+#define IPRow indexPath.row
+#define LAST_ROW(a, b) ( [self tableView: a numberOfRowsInSection: b] - 1 )
+#define TABLE_UPDATE(a, b) [a beginUpdates]; \
+b;\
+[a endUpdates];
+#define NEW_SECTION(a) sectionData = nil; \
+eachSection = nil; \
+sectionData = [[NSMutableArray alloc] init]; \
+eachSection = [[NSMutableDictionary alloc] initWithObjectsAndKeys: sectionData, @"data", \
+LOCAL(a), @"header", nil]
+#define STANDARD_TABLE_DATA_ARRAY NSMutableDictionary *eachSection = nil; NSMutableArray *sectionData = nil;
+#define END_STANDARD_TABLE_DATA_ARRAY destroy(sectionData); destroy(eachSection);
+#define IGNORE_EVENTS [[UIApplication sharedApplication] beginIgnoringInteractionEvents]
+#define END_IGNORE_EVENTS [[UIApplication sharedApplication] endIgnoringInteractionEvents]
+
+// Condition Evaluations
+#define IS_LEAP_YEAR(y) (y % 4 == 0 && y % 100 != 0) || y % 400 == 0
+#define IS_BETWEEN(a, b, c) a > b && a < c
+#define STR_CONTAINS(a, b) [a rangeOfString: b].location != NSNotFound
+#define ABS_VALUE(a) ( a < 0 ) ? -a : a
+
+// Misc.
+#define FUDEPRECATED __attribute__((deprecated))
+#define LOCAL(a) NSLocalizedString(a, @"")
+#define CLOCAL(a, b) FULocalizedString(a, b)
