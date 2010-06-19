@@ -129,7 +129,7 @@
 	self.deviceConnection = [[Connection alloc] initWithNetService: selectedDevice];
 	deviceConnection.delegate = self;
 	
-	NSLog(@"Connection: %@");
+	NSLog(@"Connection: %@", deviceConnection);
 	
 	// Progress report.
 	[connectionStatus setStringValue: @"Establishing a connection..."];
