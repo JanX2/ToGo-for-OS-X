@@ -28,7 +28,6 @@
 		3AF279B4117AC1F000492582 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97324FDCFA39411CA2CEA /* AppKit.framework */; };
 		3AF279B5117AC1F100492582 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29B97325FDCFA39411CA2CEA /* Foundation.framework */; };
 		3AFE7A4811AEC028004D5DFE /* Functions.m in Sources */ = {isa = PBXBuildFile; fileRef = 3AFE7A4711AEC028004D5DFE /* Functions.m */; };
-		3AFE7A5A11AEC24E004D5DFE /* Carbon.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 3AFE7A5911AEC24E004D5DFE /* Carbon.framework */; };
 		8D11072B0486CEB800E47090 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165CFE840E0CC02AAC07 /* InfoPlist.strings */; };
 		8D11072D0486CEB800E47090 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 29B97316FDCFA39411CA2CEA /* main.m */; settings = {ATTRIBUTES = (); }; };
 		8D11072F0486CEB800E47090 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A1FEA54F0111CA2CBB /* Cocoa.framework */; };
@@ -89,7 +88,6 @@
 		3AFE7A4611AEC028004D5DFE /* Functions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Functions.h; path = "Projects/OS X/HopTo for Mac/trunk/Functions.h"; sourceTree = DEVELOPER_DIR; };
 		3AFE7A4711AEC028004D5DFE /* Functions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Functions.m; path = "Projects/OS X/HopTo for Mac/trunk/Functions.m"; sourceTree = DEVELOPER_DIR; };
 		3AFE7A4B11AEC11A004D5DFE /* OSAKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OSAKit.framework; path = System/Library/Frameworks/OSAKit.framework; sourceTree = SDKROOT; };
-		3AFE7A5911AEC24E004D5DFE /* Carbon.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Carbon.framework; path = System/Library/Frameworks/Carbon.framework; sourceTree = SDKROOT; };
 		8D1107310486CEB800E47090 /* HopTo_for_Mac-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "HopTo_for_Mac-Info.plist"; sourceTree = "<group>"; };
 		8D1107320486CEB800E47090 /* ToGo.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ToGo.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -104,7 +102,6 @@
 				3AF279B4117AC1F000492582 /* AppKit.framework in Frameworks */,
 				3AF279B5117AC1F100492582 /* Foundation.framework in Frameworks */,
 				3A2046411185440F00554744 /* SystemConfiguration.framework in Frameworks */,
-				3AFE7A5A11AEC24E004D5DFE /* Carbon.framework in Frameworks */,
 				3AD2320511C6E0440027A7E9 /* Sparkle.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -124,7 +121,6 @@
 		1058C7A0FEA54F0111CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				3AFE7A5911AEC24E004D5DFE /* Carbon.framework */,
 				3AD2320411C6E0440027A7E9 /* Sparkle.framework */,
 				3AFE7A4B11AEC11A004D5DFE /* OSAKit.framework */,
 				3A2046401185440F00554744 /* SystemConfiguration.framework */,

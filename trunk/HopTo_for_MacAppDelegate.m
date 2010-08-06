@@ -12,7 +12,7 @@
 @synthesize urlServer;
 @synthesize urlClients;
 @synthesize statusImg1, statusImg2;
-@synthesize computerName, appBundle, documentsDirectory;
+@synthesize computerName, modelID, appBundle, documentsDirectory;
 @synthesize loginItem;
 @synthesize statusItem;
 @synthesize statusItemMenu;
@@ -28,6 +28,7 @@
 	[statusImg1 release];
 	[statusImg2 release];
 	[computerName release];
+	[modelID release];
 	[appBundle release];
 	[documentsDirectory release];
 	[statusItem release];
@@ -79,6 +80,14 @@
 -(void) applicationDidFinishLaunching: (NSNotification *) aNotification
 {
 	NSLog(@"Welcome to HopTo for Mac!");
+	
+	OSErr err;
+	char *machineName=NULL;    // This is really a Pascal-string with a length byte.
+	//gestaltUserVisibleMachineName = 'mnam'
+	err = Gestalt(gestaltUserVisibleMachineName, (long*) &machineName);
+	self.modelID = [NSString stringWithCString: machineName +1 length: machineName[0]];
+	
+	NSLog(@"Running on %@!", modelID);
 	
 	// Set up the URL Launch Responder.
 	[[NSAppleEventManager sharedAppleEventManager] setEventHandler: self andSelector: @selector(handleURLEvent:) 

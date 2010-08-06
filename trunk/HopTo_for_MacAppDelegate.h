@@ -13,12 +13,7 @@
 @protocol ServerDelegate;
 @protocol ConnectionDelegate;
 
-@interface HopTo_for_MacAppDelegate : NSObject 
-<
-#ifdef OS_X_6
-NSApplicationDelegate, 
-#endif
-ServerDelegate, ConnectionDelegate> 
+@interface HopTo_for_MacAppDelegate : NSObject <NSApplicationDelegate, ServerDelegate, ConnectionDelegate> 
 {
 	// Backend
 	Server *urlServer;
@@ -26,7 +21,7 @@ ServerDelegate, ConnectionDelegate>
 	NSTimer *statusImg1, *statusImg2;
 	
 	// Data
-	NSString *computerName, *documentsDirectory, *appBundle;
+	NSString *computerName, *modelID, *documentsDirectory, *appBundle;
 	
 	// Flags
 	BOOL loginItem;
@@ -43,7 +38,7 @@ ServerDelegate, ConnectionDelegate>
 @property (nonatomic, retain) Server *urlServer;
 @property (nonatomic, retain) NSMutableSet *urlClients;
 @property (nonatomic, retain) NSTimer *statusImg1, *statusImg2;
-@property (nonatomic, copy) NSString *computerName, *appBundle, *documentsDirectory;
+@property (nonatomic, copy) NSString *computerName, *modelID, *appBundle, *documentsDirectory;
 @property (nonatomic) BOOL loginItem;
 @property (nonatomic, retain) NSStatusItem *statusItem;
 @property (nonatomic, retain) IBOutlet NSMenu *statusItemMenu;
