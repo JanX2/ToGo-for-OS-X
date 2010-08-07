@@ -133,7 +133,7 @@ static void serverAcceptCallback(CFSocketRef socket, CFSocketCallBackType type, 
   }
   
   // for an AcceptCallBack, the data parameter is a pointer to a CFSocketNativeHandle
-  CFSocketNativeHandle nativeSocketHandle = *(CFSocketNativeHandle*)data;
+  CFSocketNativeHandle nativeSocketHandle = *((CFSocketNativeHandle *)data);
 
   [server handleNewNativeSocket:nativeSocketHandle];
 }

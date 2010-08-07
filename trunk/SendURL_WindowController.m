@@ -126,7 +126,10 @@
 	NSLog(@"Selected device: %@", selectedDevice);
 	
 	// Create a Connection.
-	self.deviceConnection = [[Connection alloc] initWithNetService: selectedDevice];
+	[deviceConnection release]; // Harmless and necessary. There is no other place we an safely do this.
+	self.deviceConnection = [[Connection alloc] initWithNetService: selectedDevice]; // If we were to switch from using the delegate mechanism to using notifications we could autorelease here.
+	// The problem is that we have to release the Connection instance when we are done with it. 
+	// We can’t do it in the methods called from it here (connectionSucceeded etc.), because control will then return to the (now released) instance thus crashing the app.  
 	deviceConnection.delegate = self;
 	
 	NSLog(@"Connection: %@", deviceConnection);
