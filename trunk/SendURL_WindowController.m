@@ -162,6 +162,11 @@
 
 	
 	[serviceList reloadData];
+	if ([self numberOfItemsInComboBox:serviceList] > 0) {
+		[serviceList selectItemAtIndex:0];
+		[serviceList setObjectValue:[self comboBox:serviceList objectValueForItemAtIndex:[serviceList indexOfSelectedItem]]];
+	}
+	
 }
 
 #pragma mark -
