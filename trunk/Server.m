@@ -48,6 +48,7 @@ NSString * const FUServerBonjourTypeURL = @"_hopto_url._tcp.";
 @synthesize delegate;
 @synthesize serviceType;
 @synthesize port, netService;
+@synthesize running;
 
 // Cleanup
 - (void)dealloc {
@@ -59,6 +60,10 @@ NSString * const FUServerBonjourTypeURL = @"_hopto_url._tcp.";
 
 // Create server and announce it
 - (BOOL)start {
+	
+	if ( self.running ) 
+		return YES;
+	
   // Start the socket server
   if ( ! [self createServer] ) {
     return NO;
@@ -73,17 +78,25 @@ NSString * const FUServerBonjourTypeURL = @"_hopto_url._tcp.";
 	if ( [delegate respondsToSelector: @selector(serverDidStart:)] )
 		[delegate serverDidStart: self];
   
+	self.running = YES;
+  
   return YES;
 }
 
 
 // Close everything
 - (void)stop {
+	
+	if ( !self.running )
+		return;
+	
   [self terminateServer];
   [self unpublishService];
 	
 	if ( [delegate respondsToSelector: @selector(serverDidStop:)] )
 		[delegate serverDidStop: self];
+	
+	self.running = NO;
 }
 
 

@@ -29,19 +29,14 @@
 
 @protocol ServerBrowserDelegate;
 
-@interface ServerBrowser : NSObject 
-#if TARGET_OS_IPHONE
-#else
-<NSNetServiceBrowserDelegate> 
-#endif
-{
+@interface ServerBrowser : NSObject <NSNetServiceBrowserDelegate> {
   NSNetServiceBrowser* netServiceBrowser;
   NSMutableArray* servers;
-  id<ServerBrowserDelegate> delegate;
+  id <ServerBrowserDelegate> delegate;
 }
 
 @property(nonatomic,readonly) NSArray* servers;
-@property(nonatomic,retain) id<ServerBrowserDelegate> delegate;
+@property(nonatomic,retain) id <ServerBrowserDelegate> delegate;
 
 // Start browsing for Bonjour services
 - (BOOL)startWithServiceType: (NSString *) serviceType;

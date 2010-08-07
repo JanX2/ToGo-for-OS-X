@@ -2,14 +2,12 @@
 	URL Manager
 \*****************/
 
-#ifndef _FUURLMANAGER_H_
-#define _FUURLMANAGER_H_
-
 // Dependencies
 #import <Foundation/Foundation.h>
 
 #pragma mark Constants
 // Constants
+extern NSString * const FUURLManagerNewURLAddedNotification;
 extern NSString * const FUURLManagerCurrentURLDidChangeNotification;
 extern NSString * const FUURLManagerURLListDidChangeNotification;
 extern NSString * const FUURLManagerWillOpenURLNotification;
@@ -50,12 +48,14 @@ extern NSString * const FUURLManagerWillOpenURLNotification;
 
 #pragma mark Data Control
 // Data Control
+-(void) checkMetadataForAllURLs;
+-(void) _checkMetadataForAllURLs;
 -(NSMutableDictionary *) fetchMetadataForURL: (NSString *) theURL;
 -(void) updateCurrentURL;
--(NSDictionary *) addURL: (NSString *) url from: (NSString *) nameOfDevice;
+-(void) addURL: (NSString *) url from: (NSString *) nameOfDevice;
+-(void) _addURLInBackground: (NSDictionary *) urlDict;
 -(void) removeURLAtIndex: (NSInteger) index;
 -(void) removeURL: (NSDictionary *) url;
 -(BOOL) saveDown;
 
 @end
-#endif

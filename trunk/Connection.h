@@ -29,11 +29,7 @@
 #import "ConnectionDelegate.h"
 
 
-@interface Connection : NSObject 
-#if TARGET_OS_IPHONE
-#else
-<NSNetServiceDelegate> 
-#endif
+@interface Connection : NSObject <NSNetServiceDelegate> 
 {
   id <ConnectionDelegate> delegate;
   
@@ -44,9 +40,11 @@
   // Connection info: native socket handle
   CFSocketNativeHandle connectedSocketHandle;
   
+	@public
   // Connection info: NSNetService
   NSNetService* netService;
   
+	@protected
   // Read stream
   CFReadStreamRef readStream;
   bool readStreamOpen;
@@ -79,7 +77,9 @@
 // Send network message
 - (void)sendNetworkPacket:(NSDictionary*)packet;
 
+#if TARGET_OS_MAC
 - (void)netService:(NSNetService *)sender didNotResolve:(NSDictionary *)errorDict;
 - (void)netServiceDidResolveAddress:(NSNetService *)sender;
+#endif
 
 @end

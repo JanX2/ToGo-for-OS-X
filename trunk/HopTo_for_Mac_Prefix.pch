@@ -48,7 +48,7 @@
 \**********/
 
 // Environment Stuff
-#ifdef __AVAILABILITY_INTERNAL__MAC_10_6
+#ifdef TARGET_OS_MAC
 #define OS_X_6
 #endif
 
@@ -126,3 +126,4 @@ LOCAL(a), @"header", nil]
 #define FUDEPRECATED __attribute__((deprecated))
 #define LOCAL(a) NSLocalizedString(a, @"")
 #define CLOCAL(a, b) FULocalizedString(a, b)
+#define NSorUIImage	NSImage

@@ -8,6 +8,17 @@
 
 #import "Foundation+.h"
 
+#if TARGET_OS_IPHONE
+@implementation UIApplication (Extended)
+
+-(void) showNetworkIndicator: (NSNumber *) show
+{
+	self.networkActivityIndicatorVisible = [show boolValue];
+}
+
+@end
+#endif
+
 @implementation NSDictionary (MoreStuff)
 
 // Functions
@@ -35,7 +46,8 @@ id dictionaryForTableViewCellWithData(NSString *reuseID, int accessoryType,
 											   editingStyle, selectionStyle, 
 											   textLabel, detailTextLabel);
 	
-	[returnDict setObject: data forKey: @"data"];
+	if ( data != nil )
+		[returnDict setObject: data forKey: @"data"];
 	
 	return returnDict;
 }
@@ -43,13 +55,14 @@ id dictionaryForTableViewCellWithData(NSString *reuseID, int accessoryType,
 id dictionaryForTableViewCellWithImage(NSString *reuseID, int accessoryType, 
 									   int editingStyle, int selectionStyle, 
 									   NSString *textLabel, NSString *detailTextLabel, 
-									   NSImage *image)
+									   id image)
 {
 	id returnDict = dictionaryForTableViewCell(reuseID, accessoryType, 
 											   editingStyle, selectionStyle, 
 											   textLabel, detailTextLabel);
 	
-	[returnDict setObject: image forKey: @"image"];
+	if ( image != nil )
+		[returnDict setObject: image forKey: @"image"];
 	
 	return returnDict;
 }
@@ -57,13 +70,14 @@ id dictionaryForTableViewCellWithImage(NSString *reuseID, int accessoryType,
 id dictionaryForTableViewCellWithImageAndData(NSString *reuseID, int accessoryType, 
 											  int editingStyle, int selectionStyle, 
 											  NSString *textLabel, NSString *detailTextLabel, 
-											  NSImage *image, id data)
+											  id image, id data)
 {
 	id returnDict = dictionaryForTableViewCellWithData(reuseID, accessoryType, 
 											   editingStyle, selectionStyle, 
 											   textLabel, detailTextLabel, data);
 	
-	[returnDict setObject: image forKey: @"image"];
+	if ( image != nil )
+		[returnDict setObject: image forKey: @"image"];
 	
 	return returnDict;
 }
@@ -90,6 +104,16 @@ id dictionaryForTableViewCellWithImageAndData(NSString *reuseID, int accessoryTy
 
 @end
 
+#if TARGET_OS_IPHONE
+@implementation UIColor (FUE)
+
++(id) flatBlueColor
+{
+	return [UIColor colorWithRed: 0.525490196078431 green: 0.572549019607843 blue: 0.8 alpha: 1.0];
+}
+
+@end
+#else if TARGET_OS_MAC
 @implementation NSColor (FUE)
 
 +(id) flatBlueColor
@@ -98,6 +122,7 @@ id dictionaryForTableViewCellWithImageAndData(NSString *reuseID, int accessoryTy
 }
 
 @end
+#endif
 
 @implementation NSString (ParseCategory)
 

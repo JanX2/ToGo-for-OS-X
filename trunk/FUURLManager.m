@@ -5,8 +5,11 @@
 // Dependencies
 #import "FUURLManager.h"
 
+#import "Functions.h"
+
 #pragma mark Constants
 // Constants
+NSString * const FUURLManagerNewURLAddedNotification = @"FUURLManagerNewURLAddedNotification";
 NSString * const FUURLManagerCurrentURLDidChangeNotification = @"FUURLManagerCurrentURLDidChangeNotification";
 NSString * const FUURLManagerURLListDidChangeNotification = @"FUURLManagerURLListDidChangeNotification";
 NSString * const FUURLManagerWillOpenURLNotification = @"FUURLManagerWillOpenURLNotification";
@@ -119,7 +122,11 @@ static FUURLManager *kSharedManager;
 		return;
 
 	// Do it.
+#if TARGET_OS_IPHONE
+	[[UIApplication sharedApplication] openURL: urlObj];
+#else if TARGET_OS_MAC
 	[[NSWorkspace sharedWorkspace] openURL: urlObj];
+#endif
 }
 
 #pragma mark URL Queries
@@ -134,28 +141,157 @@ static FUURLManager *kSharedManager;
 
 #pragma mark Data Control
 // Data Control
+-(void) checkMetadataForAllURLs
+{
+	[NSThread detachNewThreadSelector: @selector(_checkMetadataForAllURLs) toTarget: self withObject: nil];
+}
+
+-(void) _checkMetadataForAllURLs
+{
+	NSAutoreleasePool *checkPool = [NSAutoreleasePool new];
+	
+	// Enumerate through.
+	for ( int i = 0; i < [urlList count]; ++i ) {
+		
+		// Grab the current object.
+		NSDictionary *aDict = [urlList objectAtIndex: i];
+		
+		// Check it.
+		if ( [[aDict objectForKey: @"needsRefresh"] boolValue] ) {
+			
+			[aDict retain];
+			
+			// Remove it.
+			[urlList removeObjectAtIndex: i];
+			
+			// Create a new dictionary.
+			NSMutableDictionary *newDict = [self fetchMetadataForURL: [aDict objectForKey: @"url"]];
+			
+			// Add in the necessary data.
+			[newDict setObject: [aDict objectForKey: @"url"] forKey: @"url"];
+			[newDict setObject: [aDict objectForKey: @"sendingDeviceName"] forKey: @"sendingDeviceName"];
+			
+			// Now add it back into the list.
+			[urlList insertObject: newDict atIndex: i];
+			
+		}
+		
+		aDict = nil;
+		
+	}
+	
+	[self saveDown];
+	
+	[[NSNotificationCenter defaultCenter] postNotificationName: FUURLManagerURLListDidChangeNotification object: self];
+	
+	[checkPool drain];
+}
+
 -(NSMutableDictionary *) fetchMetadataForURL: (NSString *) theURL
 {
+#if TARGET_OS_IPHONE
+	[[UIApplication sharedApplication] performSelectorOnMainThread: @selector(showNetworkIndicator:) 
+														withObject: BOOLOBJ(YES) waitUntilDone: YES];
+#endif
+	
 	// Set up a URL request to the Fappulous app hub.
 	NSURL *url = [NSURL URLWithString: STRING_WITH_FORMAT(@"http://fappulo.us/apps_backend/HopTo/websiteMeta.php?url=%@", theURL)];
 	
+	BOOL noInternet = NO;
+
+#if TARGET_OS_IPHONE
+	// First, test the internet connection.
+	noInternet = ( [INTERNET_MONTITOR currentReachabilityStatus] == NotReachable );
+#endif
+	
 	// Now get the metadata.
-	NSMutableDictionary *metaData = [NSMutableDictionary dictionaryWithContentsOfURL: url];
+	NSMutableDictionary *metaData = nil;
+	
+	if ( noInternet ) 
+		metaData = nil;
+	else 
+		metaData = [NSMutableDictionary dictionaryWithContentsOfURL: url];
 	
 	// Set up the base dictionary.
 	NSMutableDictionary *urlDict = [NSMutableDictionary dictionary];
 	
+#if TARGET_OS_IPHONE
+	// Let's try getting the favicon.
+	NSURL *favURL;
+	NSURL *favURLSrc = [NSURL URLWithString: theURL];
+	NSData *iconData = nil;
+	
+	BOOL useGoogle = NO;
+	
+getIcon: ;
+	
+	if ( !useGoogle && !noInternet ) {
+		
+		favURL = [NSURL URLWithString: STRING_WITH_FORMAT(@"%@://%@/favicon.ico", [favURLSrc scheme], [favURLSrc host])];
+		
+		iconData = [NSData dataWithContentsOfURL: favURL];
+		
+	} else {
+		
+		iconData = [NSData dataWithContentsOfFile: [[NSBundle mainBundle] pathForResource: @"GoogleFavicon" ofType: @"png"]];
+		
+	}
+	
+makeDict: ;
+	
+	NSorUIImage *favIconSrc = [NSorUIImage imageWithData: iconData];
+	NSData *favIconData = UIImagePNGRepresentation(favIconSrc);
+	NSorUIImage *favIcon = [NSorUIImage imageWithData: favIconData];
+	
+	if ( favIcon == nil ) {
+		
+		useGoogle = TRUE;
+		goto getIcon;
+		
+	}
+	
+	// Save it.
+	if ( favIcon != nil ) {
+		
+		NSString *urlSha = STRING_WITH_FORMAT(@"Favicon%@.png", FUStringSha1(theURL));
+		
+		[favIconData writeToFile: [DOCUMENTS_DIRECTORY stringByAppendingPathComponent: urlSha] atomically: YES];
+		
+		[urlDict setObject: urlSha forKey: @"iconFileName"];
+		
+	} else {
+		
+		[urlDict setObject: NSNULL forKey: @"iconFileName"];
+		
+	}
+#endif
+	
 	if ( [metaData objectForKey: @"title"] == nil ) 
-		[urlDict setObject: @"" forKey: @"title"];
+		[urlDict setObject: @"No Title" forKey: @"title"];
 	else 
-		[urlDict setObject: [metaData objectForKey: @"title"] forKey: @"title"];
+		[urlDict setObject: [[metaData objectForKey: @"title"] stringByReplacingOccurrencesOfString: @"\\" withString: @""] forKey: @"title"];
 	
 	if ( [metaData objectForKey: @"description"] == nil )
-		[urlDict setObject: @"" forKey: @"description"];
+		[urlDict setObject: @"No description found." forKey: @"description"];
 	else 
-		[urlDict setObject: [metaData objectForKey: @"description"] forKey: @"description"];
+		[urlDict setObject: [[metaData objectForKey: @"description"] stringByReplacingOccurrencesOfString: @"\\" withString: @""] 
+						forKey: @"description"];
+	
+	// If no internet, set a flag for later so we'll know to get the metadata again.
+	if ( noInternet ) {
+		
+		[urlDict setObject: BOOLOBJ(YES) forKey: @"needsRefresh"];
+		
+		[urlDict setObject: @"Couldn't connect to internet to download information. Will try again later." forKey: @"description"];
+		
+	}
 	
 	metaData = nil;
+	
+#if TARGET_OS_IPHONE
+	[[UIApplication sharedApplication] performSelectorOnMainThread: @selector(showNetworkIndicator:) 
+														withObject: BOOLOBJ(NO) waitUntilDone: YES];
+#endif
 	
 	return urlDict;
 }
@@ -179,8 +315,62 @@ static FUURLManager *kSharedManager;
 	}
 }
 
--(NSDictionary *) addURL: (NSString *) url from: (NSString *) nameOfDevice
+-(void) addURL: (NSString *) url from: (NSString *) nameOfDevice
+{	
+	[NSThread detachNewThreadSelector: @selector(_addURLInBackground:) toTarget: self 
+						   withObject: DICTIONARY(url, @"url", nameOfDevice, @"deviceName")];
+}
+
+-(void) _addURLInBackground: (NSDictionary *) urlSourceDict
 {
+	// Set up a pool.
+	NSAutoreleasePool *addPool = [NSAutoreleasePool new];
+	
+	// Grab the info out of the dictionary.
+	NSString *url = [urlSourceDict objectForKey: @"url"];
+	NSString *nameOfDevice = [urlSourceDict objectForKey: @"deviceName"];
+	
+	// Enumerate through to check for dupes.
+	NSAutoreleasePool *dupePool = [NSAutoreleasePool new];
+	
+	BOOL hasDupe = FALSE;
+	
+	for ( int i = 0; i < [urlList count]; ++i ) {
+		
+		// Grab the URL.
+		NSMutableDictionary *thisURL = [[urlList objectAtIndex: i] retain];
+		
+		// Check the address for equality.
+		if ( [url isEqualToString: [thisURL objectForKey: @"url"]] ) {
+			
+			// Check for previous dupes.
+			if ( hasDupe )
+				continue;
+			
+			// Set the flag.
+			hasDupe = TRUE;
+			
+			// Remove it.
+			[urlList removeObjectAtIndex: i];
+			
+			// Add it back to the beginning.
+			[urlList insertObject: thisURL atIndex: 0];
+			
+			// Change the sending device.
+			[thisURL setObject: nameOfDevice forKey: @"deviceName"];
+			
+			// Wrap up.
+			[thisURL release];
+			goto wrapUp;
+			
+		}
+		
+		[thisURL release];
+		
+	}
+	
+	[dupePool drain];
+	
 	// Get the info set up in a dictionary.
 	NSMutableDictionary *urlDict = [self fetchMetadataForURL: url];
 	
@@ -193,6 +383,8 @@ static FUURLManager *kSharedManager;
 	else 
 		[urlList addObject: urlDict];
 	
+wrapUp: ;
+	
 	// We'll only hang on to the last 100.
 	if ( [urlList count] > 100 ) 
 		[urlList removeLastObject];
@@ -200,11 +392,11 @@ static FUURLManager *kSharedManager;
 	[self saveDown];
 	
 	// Tell everyone what's just happened.
+	[[NSNotificationCenter defaultCenter] postNotificationName: FUURLManagerNewURLAddedNotification object: self];
 	[[NSNotificationCenter defaultCenter] postNotificationName: FUURLManagerCurrentURLDidChangeNotification object: self];
 	[[NSNotificationCenter defaultCenter] postNotificationName: FUURLManagerURLListDidChangeNotification object: self];
 	
-	// Return the new dictionary.
-	return self.currentURL;
+	[addPool drain];
 }
 
 -(void) removeURLAtIndex: (NSInteger) index
@@ -226,6 +418,15 @@ static FUURLManager *kSharedManager;
 -(void) removeURL: (NSDictionary *) url
 {
 	if ( [urlList containsObject: url] ) {
+		
+		// Get rid of the cached icon if there is one.
+		if ( [url objectForKey: @"iconFileName"] != NSNULL ) {
+			
+			NSFileManager *fm = [NSFileManager defaultManager];
+			
+			[fm removeItemAtPath: [DOCUMENTS_DIRECTORY stringByAppendingPathComponent: [url objectForKey: @"iconFileName"]] error: nil];
+			
+		}
 		
 		// Delete it.
 		[urlList removeObject: url];

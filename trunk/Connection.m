@@ -97,41 +97,46 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
 }
 
 
+- (id)init {
+    self = [super init];
+    if (self) {
+		[self clean];
+	}
+    return self;
+}
+
 // Initialize and store connection information until 'connect' is called
 - (id)initWithHostAddress:(NSString*)_host andPort:(int)_port {
-	
-	self = [super init];
-  [self clean];
-  
-  self.host = _host;
-  self.port = _port;
+  [self init];
+  if (self) {
+	  self.host = _host;
+	  self.port = _port;
+  }
   return self;
 }
 
 
 // Initialize using a native socket handle, assuming connection is open
 - (id)initWithNativeSocketHandle:(CFSocketNativeHandle)nativeSocketHandle {
-	self = [super init];
-  [self clean];
-
-  self.connectedSocketHandle = nativeSocketHandle;
+  [self init];
+  if (self) {
+	  self.connectedSocketHandle = nativeSocketHandle;
+  }
   return self;
 }
 
 
 // Initialize using an instance of NSNetService
 - (id)initWithNetService:(NSNetService*)_netService {
-	[self clean];
-	
-  // Has it been resolved?
-  if ( _netService.hostName != nil ) {
-    return [self initWithHostAddress:_netService.hostName andPort:_netService.port];
+  [self init];
+  if (self) {
+	  // Has it been resolved?
+	  if ( _netService.hostName != nil ) {
+		return [self initWithHostAddress:_netService.hostName andPort:_netService.port];
+	  }
+	  
+	  self.netService = _netService;
   }
-	
-	self = [super init];
-	[self clean];
-  
-  self.netService = _netService;
   return self;
 }
 
@@ -241,10 +246,10 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
   
   // Cleanup buffers
   [incomingDataBuffer release];
-  incomingDataBuffer = NULL;
+  incomingDataBuffer = nil;
   
   [outgoingDataBuffer release];
-  outgoingDataBuffer = NULL;
+  outgoingDataBuffer = nil;
   
   // Stop net service?
   if ( netService != nil ) {
@@ -252,10 +257,10 @@ void writeStreamEventHandler(CFWriteStreamRef stream, CFStreamEventType eventTyp
     self.netService = nil;
   }
 	
-	[delegate connectionTerminated: self];
+  [delegate connectionTerminated: self];
   
   // Reset all other variables
-  [self clean];
+  //[self clean];
 }
 
 
@@ -320,7 +325,7 @@ void readStreamEventHandler(CFReadStreamRef stream, CFStreamEventType eventType,
     CFIndex len = CFReadStreamRead(readStream, buf, sizeof(buf));
     if ( len <= 0 ) {
       // Either stream was closed or error occurred. Close everything up and treat this as "connection terminated"
-     // [self close];
+		[self close];
 		return;
     }
     

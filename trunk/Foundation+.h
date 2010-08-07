@@ -3,7 +3,17 @@
 \***************************/
 
 //#import <Foundation/Foundation.h>
+#if TARGET_OS_IPHONE
+#import <UIKit/UIKit.h>
+
+@interface UIApplication (Extended)
+
+-(void) showNetworkIndicator: (NSNumber *) show;
+
+@end
+#else
 #import <Cocoa/Cocoa.h>
+#endif
 
 @interface NSDictionary (MoreStuff)
 
@@ -18,18 +28,22 @@ id dictionaryForTableViewCellWithData(NSString *reuseID, int accessoryType,
 id dictionaryForTableViewCellWithImage(NSString *reuseID, int accessoryType, 
 									   int editingStyle, int selectionStyle, 
 									   NSString *textLabel, NSString *detailTextLabel, 
-									   NSImage *image);
+									   id image);
 id dictionaryForTableViewCellWithImageAndData(NSString *reuseID, int accessoryType, 
 											  int editingStyle, int selectionStyle, 
 											  NSString *textLabel, NSString *detailTextLabel, 
-											  NSImage *image, id data);
+											  id image, id data);
 
 // Instance Management
 +(id) dictionaryByAddingObjectsAndKeys: (id) object, ... NS_REQUIRES_NIL_TERMINATION;
 
 @end
 
+#if TARGET_OS_IPHONE
+@interface UIColor (FUE)
+#else if TARGET_OS_MAC
 @interface NSColor (FUE)
+#endif
 
 +(id) flatBlueColor;
 

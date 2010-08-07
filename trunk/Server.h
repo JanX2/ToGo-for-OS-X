@@ -40,6 +40,7 @@ extern NSString * const FUServerBonjourTypeURL;
     id<NSObject, ServerDelegate> delegate;
     NSNetService* netService;
 	NSString *serviceType;
+	BOOL running;
 }
 
 // Initialize and start listening for connections
@@ -49,5 +50,6 @@ extern NSString * const FUServerBonjourTypeURL;
 // Delegate receives various notifications about the state of our server
 @property(nonatomic,retain) id<NSObject, ServerDelegate> delegate;
 @property (nonatomic, assign) NSString *serviceType;
+@property (nonatomic) BOOL running;
 
 @end
