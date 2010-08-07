@@ -20,6 +20,15 @@
 @synthesize window;
 
 #pragma mark Instance Management
+- (id)init
+{
+	self = [super init];
+	if (self) {
+		sendURL = [SendURL_WindowController new];
+	}
+	return self;
+}
+
 // Instance Management
 -(void) dealloc
 {
@@ -35,7 +44,8 @@
 	[statusItemBlink1 release];
 	[statusItemBlink2 release];
 	[window release];
-	
+	[sendURL release];
+
 	[super dealloc];
 }
 
@@ -150,10 +160,9 @@
 	NSString *explodedURL = [urlSource stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 	
 	// Now open it in a send dialogue.
-	SendURL_WindowController *sendURL = [[SendURL_WindowController new] autorelease];
 	sendURL.preloadedURL = explodedURL;
 	
-	[[NSApplication sharedApplication] runModalForWindow: [sendURL window]];
+	[sendURL showWindow:nil];
 }
 
 #pragma mark Login Startup Management
@@ -185,7 +194,7 @@
 -(IBAction) pairingAction: (id) sender
 {
 	// Set up a window.
-	Pairing_WindowController *pairingWindow = [[[Pairing_WindowController alloc] init] autorelease];
+	Pairing_WindowController *pairingWindow = [[Pairing_WindowController new] autorelease];
 	
 	// Order it front.
 	[[pairingWindow window] makeKeyAndOrderFront: self];
@@ -196,9 +205,7 @@
 
 -(IBAction) sendURLAction: (id) sender
 {
-	SendURL_WindowController *sendURL = [[SendURL_WindowController new] autorelease];
-	
-	[[NSApplication sharedApplication] runModalForWindow: [sendURL window]];
+	[sendURL showWindow:sender];
 }
 
 #pragma mark -

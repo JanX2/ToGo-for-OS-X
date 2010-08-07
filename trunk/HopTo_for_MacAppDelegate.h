@@ -36,6 +36,8 @@ ServerDelegate, ConnectionDelegate>
 	NSMenu *statusItemMenu;
 	NSWindow *window;
 	NSImage *statusItemBlink1, *statusItemBlink2;
+	
+	SendURL_WindowController *sendURL;
 }
 
 #pragma mark Properties

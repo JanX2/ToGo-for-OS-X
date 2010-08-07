@@ -137,6 +137,8 @@
 	
 	// Connect.
 	[deviceConnection connect];
+	
+	[self close];
 }
 
 #pragma mark -
