@@ -24,7 +24,7 @@ ServerBrowserDelegate, ConnectionDelegate>
 	
 	// Data
 	NSString *preloadedURL;
-	NSMutableArray *FUHTServices;
+	NSArray *FUHTServices;
 	
 	// View
 	NSTextField *urlField, *connectionStatus, *deviceSearch;
@@ -37,7 +37,7 @@ ServerBrowserDelegate, ConnectionDelegate>
 @property (nonatomic, retain) ServerBrowser *finder;
 @property (nonatomic, retain) Connection *deviceConnection;
 @property (nonatomic, copy) NSString *preloadedURL;
-@property (nonatomic, retain) NSMutableArray *FUHTServices;
+@property (nonatomic, retain) NSArray *FUHTServices;
 @property (nonatomic, retain) IBOutlet NSTextField *urlField, *connectionStatus, *deviceSearch;
 @property (nonatomic, retain) IBOutlet NSComboBox *serviceList;
 @property (nonatomic, retain) IBOutlet NSProgressIndicator *connectionIndicator, *deviceIndicator;

@@ -34,7 +34,7 @@
 extern NSString * const FUServerBonjourTypePairing;
 extern NSString * const FUServerBonjourTypeURL;
 
-@interface Server : NSObject {
+@interface Server : NSObject <NSNetServiceDelegate> {
     uint16_t port;
     CFSocketRef listeningSocket;
     id<NSObject, ServerDelegate> delegate;

@@ -30,11 +30,12 @@
 
 
 @interface Connection : NSObject 
-#ifdef OS_X_6
+#if TARGET_OS_IPHONE
+#else
 <NSNetServiceDelegate> 
 #endif
 {
-  id<ConnectionDelegate> delegate;
+  id <ConnectionDelegate> delegate;
   
   // Connection info: host address and port
   NSString* host;

@@ -12,7 +12,7 @@
 @protocol ServerDelegate;
 @protocol ConnectionDelegate;
 
-@interface Pairing_WindowController : NSWindowController <ServerDelegate, ConnectionDelegate>
+@interface Pairing_WindowController : NSWindowController <ServerDelegate, ConnectionDelegate, PairingServiceDelegate>
 {
 	// Backend.
 	PairingService *server;

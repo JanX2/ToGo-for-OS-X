@@ -53,7 +53,7 @@
 #endif
 
 // Shared Instances
-#define APP_DELEGATE [[NSApplication sharedApplication] delegate]
+#define APP_DELEGATE (HopTo_for_MacAppDelegate *)[[NSApplication sharedApplication] delegate]
 #define Funcc [FUNCC mainCenter]
 
 // Data Access

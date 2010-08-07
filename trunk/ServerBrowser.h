@@ -30,7 +30,8 @@
 @protocol ServerBrowserDelegate;
 
 @interface ServerBrowser : NSObject 
-#ifdef OS_X_6
+#if TARGET_OS_IPHONE
+#else
 <NSNetServiceBrowserDelegate> 
 #endif
 {

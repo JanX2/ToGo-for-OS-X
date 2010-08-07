@@ -97,7 +97,7 @@
 	// Get the index of the selected device.
 	NSInteger selectedIndex = [serviceList indexOfSelectedItem];
 	
-	NSLog(@"%i selected index", selectedIndex);
+	NSLog(@"%ld selected index", (long)selectedIndex);
 	
 	// Check that something is actually selected.
 	if ( selectedIndex == -1 ) {
