@@ -85,7 +85,10 @@
 													 forEventClass: kInternetEventClass andEventID: kAEGetURL];
 	
 	// Get the computer name.
-	self.computerName = STRING((NSString *) SCDynamicStoreCopyComputerName(NULL, NULL));
+	CFStringRef scComputerName = SCDynamicStoreCopyComputerName(NULL, NULL);
+	self.computerName = STRING((NSString *)scComputerName);
+	CFMakeCollectable(scComputerName);
+	CFRelease(scComputerName);
 	
 	// Set the file directories.
 	self.appBundle = [[NSBundle mainBundle] bundlePath];
@@ -147,7 +150,7 @@
 	NSString *explodedURL = [urlSource stringByReplacingPercentEscapesUsingEncoding: NSUTF8StringEncoding];
 	
 	// Now open it in a send dialogue.
-	SendURL_WindowController *sendURL = [[SendURL_WindowController alloc] init];
+	SendURL_WindowController *sendURL = [[SendURL_WindowController new] autorelease];
 	sendURL.preloadedURL = explodedURL;
 	
 	[[NSApplication sharedApplication] runModalForWindow: [sendURL window]];
@@ -193,7 +196,7 @@
 
 -(IBAction) sendURLAction: (id) sender
 {
-	SendURL_WindowController *sendURL = [[SendURL_WindowController alloc] init];
+	SendURL_WindowController *sendURL = [[SendURL_WindowController new] autorelease];
 	
 	[[NSApplication sharedApplication] runModalForWindow: [sendURL window]];
 }

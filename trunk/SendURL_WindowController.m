@@ -58,7 +58,7 @@
 		
 	} else {
 		
-		NSString *lastString = [[[NSPasteboard generalPasteboard] readObjectsForClasses: ARRAY([NSString class]) 
+		NSString *lastString = [[[NSPasteboard generalPasteboard] readObjectsForClasses: [ARRAY([NSString class]) autorelease] 
 																				options: [NSDictionary dictionary]] objectAtIndex: 0];
 		
 		NSURL *testURL = [NSURL URLWithString: lastString];
