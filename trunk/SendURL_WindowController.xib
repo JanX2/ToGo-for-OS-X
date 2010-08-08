@@ -329,7 +329,7 @@
 				<string key="NSScreenRect">{{0, 0}, {1440, 878}}</string>
 				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 			</object>
-			<object class="NSUserDefaultsController" id="706800497">
+			<object class="NSUserDefaultsController" id="719765562">
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</object>
@@ -375,14 +375,6 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">44</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">deviceIndicator</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="780550580"/>
-					</object>
-					<int key="connectionID">51</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -667,7 +659,7 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">53</int>
-						<reference key="object" ref="706800497"/>
+						<reference key="object" ref="719765562"/>
 						<reference key="parent" ref="0"/>
 					</object>
 				</object>
