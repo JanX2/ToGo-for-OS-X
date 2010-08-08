@@ -318,7 +318,7 @@
 	
 	if ( response == 1 ) {
 		
-		[[FUURLManager sharedManager] openURL: [[FUURLManager sharedManager] currentURL]];
+		[[FUURLManager sharedManager] openURL: message];
 		
 	}
 }

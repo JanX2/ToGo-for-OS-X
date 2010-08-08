@@ -112,6 +112,9 @@ static FUURLManager *kSharedManager;
 	// Get the url string.
 	NSString *urlStr = [url objectForKey: @"url"];
 	
+	if ( urlStr == nil )
+		return;
+
 	// Put it together for use.
 	NSURL *urlObj = [NSURL URLWithString: urlStr];
 	
