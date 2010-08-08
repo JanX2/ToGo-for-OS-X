@@ -11,11 +11,12 @@
 // Properties
 @synthesize finder;
 @synthesize deviceConnection;
-@synthesize preloadedURL;
+@dynamic preloadedURL;
 @synthesize FUHTServices;
-@synthesize urlField, connectionStatus, deviceSearch;
-@synthesize serviceList;
-@synthesize connectionIndicator, deviceIndicator;
+
+@synthesize urlText;
+@synthesize connectionStatusMessage, deviceSearchMessage;
+@synthesize connectionActive, searchingForDevices;
 
 #pragma mark Instance Management
 // Instance Management
@@ -23,10 +24,15 @@
 {
 	self = [self initWithWindowNibName: @"SendURL_WindowController"];
 	
+	if (self) {
+		self.urlText = @"";
+		[self clean];
+	}
+	
 	return self;
 }
 
--(void) loadWindowWithURL: (NSString *) url
+-(void) loadWindowWithURL: (NSString *) url;
 {
 	self.preloadedURL = url;
 }
@@ -37,62 +43,101 @@
 	[deviceConnection release];
 	[preloadedURL release];
 	[FUHTServices release];
-	[urlField release];
-	[connectionStatus release];
-	[deviceSearch release];
-	[serviceList release];
-	[connectionIndicator release];
-	[deviceIndicator release];
+	
+	[urlText release];
 	
 	[super dealloc];
 }
 
+- (void) clean;
+{
+	self.connectionStatusMessage = @"";
+	self.deviceSearchMessage = @"";
+	connectionActive = NO;
+	searchingForDevices = NO;
+}
+
 #pragma mark Window Management
 // Window Management
--(void) windowDidLoad
+- (void) windowDidLoad
 {
-	// Set up the url field. We'll use either the preloaded URL, or the last NSString in the Pasteboard.
-	if ( preloadedURL != nil ) {
-		
-		[urlField setStringValue: preloadedURL];
-		
-	} else {
-		
-		NSString *lastString = [[[NSPasteboard generalPasteboard] readObjectsForClasses: [ARRAY([NSString class]) autorelease] 
-																				options: [NSDictionary dictionary]] objectAtIndex: 0];
-		
-		NSURL *testURL = [NSURL URLWithString: lastString];
-		
-		if ( testURL != nil )
-			[urlField setStringValue: lastString];
-		else 
-			[urlField setStringValue: @""];
-		
+}
+
+- (IBAction)showWindow:(id)sender
+{
+	[self clean];
+	
+	// If there is no preloadedURL, set it again to refresh urlText
+	if ( preloadedURL == nil ) {
+		self.preloadedURL = nil;
 	}
 	
-	// Start up the Finder.
-	self.finder = [[ServerBrowser alloc] init];
+	// Start up the finder.
+	self.finder = [[[ServerBrowser alloc] init] autorelease];
 	finder.delegate = self;
 	
 	[finder startWithServiceType: FUServerBonjourTypeURL];
+	
+	// Order it front.
+	[[self window] makeKeyAndOrderFront: self];
+	
+	// Activate the app.
+	[[NSApplication sharedApplication] activateIgnoringOtherApps: YES];
+	
+	[super showWindow:sender];
 }
+
+- (void)close
+{
+	// Stop the Finder.
+	[finder stop];
+	
+	[super close];
+}
+
+
+#pragma mark Accessors
+- (NSString *)preloadedURL {
+    return [[preloadedURL retain] autorelease];
+}
+
+- (void)setPreloadedURL:(NSString *)value {
+    if (preloadedURL != value) {
+        [preloadedURL release];
+        preloadedURL = [value copy];
+		
+		// Set up the url text. We'll use either the preloaded URL, or the last NSString in the Pasteboard.
+		if ( preloadedURL != nil ) {
+			
+			self.urlText = preloadedURL;
+			
+		} else {
+			
+			NSString *lastString = [[[NSPasteboard generalPasteboard] readObjectsForClasses: [ARRAY([NSString class]) autorelease] 
+																					options: [NSDictionary dictionary]] objectAtIndex: 0];
+			
+			NSURL *testURL = [NSURL URLWithString: lastString];
+			
+			if ( testURL != nil )
+				self.urlText = lastString;
+			
+		}
+    }
+}
+
+
 
 #pragma mark User Interaction Management
 // User Interaction Mangement
 -(IBAction) cancelAction: (id) sender
 {
-	// Stop the Finder.
-	[finder stop];
-	
 	[self close];
-	
-	[[NSApplication sharedApplication] stopModal];
 }
 
 -(IBAction) sendAction: (id) sender
 {	
-	[connectionIndicator startAnimation: self];
-	[connectionStatus setStringValue: @"Checking things out..."];
+	self.connectionActive = YES;
+	self.connectionStatusMessage = @"Checking things out...";
 	
 	// Get the index of the selected device.
 	NSInteger selectedIndex = [serviceList indexOfSelectedItem];
@@ -102,19 +147,19 @@
 	// Check that something is actually selected.
 	if ( selectedIndex == -1 ) {
 		
-		[connectionIndicator stopAnimation: self];
+		self.connectionActive = NO;
 		
-		[connectionStatus setStringValue: @"Please select a device!"];
+		self.connectionStatusMessage = @"Please select a device!";
 		
 		return;
 		
 	}
 	
-	if ( [urlField stringValue] == nil ) {
+	if ( urlText == nil || [self.urlText length] == 0 ) {
 		
-		[connectionIndicator stopAnimation: self];
+		self.connectionActive = NO;
 		
-		[connectionStatus setStringValue: @"Please enter a URL!"];
+		self.connectionStatusMessage = @"Please enter a URL!";
 		
 		return;
 		
@@ -135,13 +180,13 @@
 	NSLog(@"Connection: %@", deviceConnection);
 	
 	// Progress report.
-	[connectionStatus setStringValue: @"Establishing a connection..."];
-	[connectionStatus setHidden: NO];
+	self.connectionStatusMessage = @"Establishing a connection...";
 	
 	// Connect.
 	[deviceConnection connect];
 	
 	[self close];
+
 }
 
 #pragma mark -
@@ -149,22 +194,21 @@
 /* Server Browser Delegation *\
 \*****************************/
 
--(void) updateServerList
+- (void) updateServerList
 {
 	self.FUHTServices = finder.servers;
 	
 	if ( [FUHTServices count] > 0 ) {
 		
-		[deviceSearch setStringValue: STRING_WITH_FORMAT(@"%i device%@ found.", [FUHTServices count], ( [FUHTServices count] == 1 ) ? @"" : @"s")];
-		[deviceIndicator stopAnimation: self];
+		self.deviceSearchMessage = STRING_WITH_FORMAT(@"%i device%@ found.", [FUHTServices count], ( [FUHTServices count] == 1 ) ? @"" : @"s");
+		self.searchingForDevices = NO;
 		
 	} else {
 		
-		[deviceSearch setStringValue: @"Looking for devices..."];
-		[deviceIndicator startAnimation: self];
+		self.deviceSearchMessage = @"Looking for devices...";
+		self.searchingForDevices = YES;
 		
 	}
-
 	
 	[serviceList reloadData];
 	if ([self numberOfItemsInComboBox:serviceList] > 0) {
@@ -188,12 +232,13 @@
 	if ( connection == deviceConnection ) {
 		
 		// Report progress.
-		[connectionStatus setStringValue: @"Sending site..."];
+		self.connectionStatusMessage = @"Sending site...";
 		
-		NSDictionary *packet = DICTIONARY([urlField stringValue], @"url", DEVICE_NAME, @"sendingDeviceName");
+		NSDictionary *packet = DICTIONARY(urlText, @"url", DEVICE_NAME, @"sendingDeviceName");
 		
 		[connection sendNetworkPacket: packet];
 		
+		self.urlText = @"";
 	}
 }
 
@@ -206,7 +251,7 @@
 		if ( failureCount < 5 ) {
 		
 			// Report progress.
-			[connectionStatus setStringValue: @"Connection failed! Retrying..."];
+			self.connectionStatusMessage = @"Connection failed! Retrying...";
 			
 			// Set a timer to retry.
 			[connection connect];
@@ -215,9 +260,9 @@
 			
 		} else {
 			
-			[connectionStatus setStringValue: @"Could not connect. :("];
+			self.connectionStatusMessage = @"Could not connect. :(";
 			
-			[connectionIndicator stopAnimation: self];
+			self.connectionActive = NO;
 			
 		}
 		
@@ -227,9 +272,9 @@
 -(void) connectionTerminated: (Connection *) connection
 {
 	// This is a successful connection, we'll assume.
-	[connectionStatus setStringValue: @"Success!"];
+	self.connectionStatusMessage = @"Success!";
 	
-	[connectionIndicator stopAnimation: self];
+	self.connectionActive = NO;
 	
 	self.deviceConnection = nil;
 	
@@ -249,7 +294,7 @@
 		[deviceConnection close];
 	else {
 		
-		NSDictionary *packet = DICTIONARY([urlField stringValue], @"url", DEVICE_NAME, @"sendingDeviceName");
+		NSDictionary *packet = DICTIONARY(urlText, @"url", DEVICE_NAME, @"sendingDeviceName");
 		
 		[connection sendNetworkPacket: packet];
 		

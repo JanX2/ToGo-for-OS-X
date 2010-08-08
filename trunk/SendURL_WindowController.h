@@ -26,10 +26,13 @@ ServerBrowserDelegate, ConnectionDelegate>
 	NSString *preloadedURL;
 	NSArray *FUHTServices;
 	
+	// Model
+	NSString *urlText;
+	NSString *connectionStatusMessage, *deviceSearchMessage;
+	BOOL connectionActive, searchingForDevices;
+	
 	// View
-	NSTextField *urlField, *connectionStatus, *deviceSearch;
-	NSComboBox *serviceList;
-	NSProgressIndicator *connectionIndicator, *deviceIndicator;
+	IBOutlet NSComboBox *serviceList;
 }
 
 #pragma mark Properties
@@ -38,18 +41,15 @@ ServerBrowserDelegate, ConnectionDelegate>
 @property (nonatomic, retain) Connection *deviceConnection;
 @property (nonatomic, copy) NSString *preloadedURL;
 @property (nonatomic, retain) NSArray *FUHTServices;
-@property (nonatomic, retain) IBOutlet NSTextField *urlField, *connectionStatus, *deviceSearch;
-@property (nonatomic, retain) IBOutlet NSComboBox *serviceList;
-@property (nonatomic, retain) IBOutlet NSProgressIndicator *connectionIndicator, *deviceIndicator;
+
+@property (nonatomic, copy) NSString *urlText;
+@property (nonatomic, retain) NSString *connectionStatusMessage, *deviceSearchMessage;
+@property (nonatomic, assign) BOOL connectionActive, searchingForDevices;
 
 #pragma mark Instance Management
 // Instance Management
--(void) loadWindowWithURL: (NSString *) url;
--(void) dealloc;
-
-#pragma mark Window Management
-// Window Management
--(void) windowDidLoad;
+- (void) loadWindowWithURL: (NSString *) url;
+- (void) clean;
 
 #pragma mark User Interaction Management
 // User Interaction Mangement
